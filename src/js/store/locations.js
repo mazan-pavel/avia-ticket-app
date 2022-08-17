@@ -1,6 +1,6 @@
 import api from '../services/apiService';
 import {formatDate} from '../helpers/date'
-class Locations {
+export class Locations {
   constructor(api, helpers) {
     this.api = api;
     this.countries = null;
@@ -47,6 +47,7 @@ class Locations {
   }
 
   serializeCountries(countries) {
+    if (!countries || !countries.length || !Array.isArray(countries)) return {};
     return countries.reduce((acc, country) => {
       acc[country.code] = country;
       return acc;
@@ -55,9 +56,10 @@ class Locations {
 
   serializeAirlines(airlines) {
     return airlines.reduce((acc, next) => {
-      next.logo = `https://pics.avs.io/200/200/${next.code}.png`;
-      next.name = next.name || next?.name_translations?.en;
-      acc[next.code] = next;
+      const itemCopy = {...next}
+      itemCopy.logo = `https://pics.avs.io/200/200/${itemCopy.code}.png`;
+      itemCopy.name = itemCopy.name || itemCopy?.name_translations?.en;
+      acc[itemCopy.code] = itemCopy;
       return acc;
     }, {});
   }
